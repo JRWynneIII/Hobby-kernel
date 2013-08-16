@@ -75,6 +75,16 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 	const size_t index = y * VGA_WIDTH + (x-1);
 	terminal_buffer[index] = make_vgaentry(c, color);
 }
+
+void movecsr()
+{
+	unsigned short temp = terminal_row * 80 + terminal_column;
+	outportb(0x3D4, 14);
+	outportb(0x3D5, (unsigned char)((temp >> 8)&0xFF));
+	outportb(0x3D4, 15);
+	outportb(0x3D4, (unsigned char)(temp&0xFF));
+
+}
  
 void terminal_scroll(int y)
 {
@@ -110,6 +120,7 @@ void terminal_putchar(char c)
 	//	}
 	}
 	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+	movecsr();
 }
  
 void tcputs(const char* data, uint8_t color)
@@ -147,4 +158,5 @@ void cls()
 	memsetw(tbuffer, blank, 80*25);
 	terminal_row = 0;
 	terminal_column = 0;
+	movecsr();
 }
