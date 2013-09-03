@@ -69,22 +69,24 @@ void terminal_setcolor(uint8_t color)
 {
 	terminal_color = color;
 }
+
+void movecsr(size_t row, size_t column)
+{
+	unsigned short temp = (row * 80) + column;
+	outportb(0x3D4, 0x0E);
+	outportb(0x3D5, temp >> 8);
+	outportb(0x3D4, 0x0F);
+	outportb(0x3D5, temp);
+
+}
  
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 {
 	const size_t index = y * VGA_WIDTH + (x-1);
 	terminal_buffer[index] = make_vgaentry(c, color);
+	movecsr(terminal_row,terminal_column);
 }
 
-void movecsr()
-{
-	unsigned short temp = terminal_row * 80 + terminal_column;
-	outportb(0x3D4, 14);
-	outportb(0x3D5, (unsigned char)((temp >> 8)&0xFF));
-	outportb(0x3D4, 15);
-	outportb(0x3D4, (unsigned char)(temp&0xFF));
-
-}
  
 void terminal_scroll(int y)
 {
@@ -98,6 +100,7 @@ void terminal_scroll(int y)
 
 void terminal_putchar(char c)
 {
+	movecsr(terminal_row,terminal_column);
 	if (terminal_row >= VGA_HEIGHT)
 	{
 		terminal_scroll(terminal_row);
@@ -114,13 +117,8 @@ void terminal_putchar(char c)
 	if ( ++terminal_column >= VGA_WIDTH )
 	{
 		terminal_column = 0;
-	//	if (++terminal_row == VGA_HEIGHT)
-	//	{
-	//		terminal_row = 0;
-	//	}
 	}
 	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	movecsr();
 }
  
 void tcputs(const char* data, uint8_t color)
@@ -158,5 +156,4 @@ void cls()
 	memsetw(tbuffer, blank, 80*25);
 	terminal_row = 0;
 	terminal_column = 0;
-	movecsr();
 }

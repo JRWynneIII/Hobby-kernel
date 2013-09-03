@@ -14,4 +14,9 @@ unsigned short *memsetw(unsigned short *dest, unsigned short val, size_t count);
 size_t strlen(const char* str);
 
 unsigned char inportb (unsigned short _port);
+
+void gdt_install();
+
+void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
+
 #endif

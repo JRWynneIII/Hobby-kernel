@@ -11,6 +11,7 @@
  
 void kernel_main()
 {
+	gdt_install();
 	terminal_initialize();
 	tcputs("Welcome to PolarisOS\n", COLOR_WHITE);
 	tcputs("Prompt$ ", COLOR_GREEN);
