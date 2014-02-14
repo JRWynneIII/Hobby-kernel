@@ -15,6 +15,14 @@ void *memcpy(void *dest, const void *src, size_t count)
     return dest;
 }
 
+static inline void io_wait(void)
+{
+    /* TODO: This is probably fragile. */
+    asm volatile ( "jmp 1f\n\t"
+                   "1:jmp 2f\n\t"
+                   "2:" );
+}
+
 void *memset(void *dest, char val, size_t count)
 {
     char *temp = (char *)dest;
@@ -28,15 +36,15 @@ unsigned short *memsetw(unsigned short *dest, unsigned short val, size_t count)
     for( ; count != 0; count--) *temp++ = val;
     return dest;
 }
-//unsigned char *memset(unsigned char *dest, unsigned char val, int count)
-//{
-//	char* temp = (char *)dest;
-//	while (count !=0)
-//	{
-//		*temp++ = val;
-//	}
-//	return dest;
-//}
+/*unsigned char *memset(unsigned char *dest, unsigned char val, int count)
+{
+	char* temp = (char *)dest;
+	while (count !=0)
+	{
+		*temp++ = val;
+	}
+	return dest;
+}*/
 
 //unsigned short *memsetw(unsigned short *dest, unsigned short val, int count)
 //{
