@@ -3,6 +3,14 @@
 
 void outportb (unsigned short _port, unsigned char _data);
 
+static inline void io_wait(void)
+{
+    /* TODO: This is probably fragile. */
+    asm volatile ( "jmp 1f\n\t"
+                   "1:jmp 2f\n\t"
+                   "2:" );
+}
+
 void *memcpy(void *dest, const void *src, size_t count);
 
 //unsigned char *memset(unsigned char *dest, unsigned char val, int count);
