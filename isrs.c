@@ -1,7 +1,7 @@
 #include <stdbool.h> /* C doesn't have booleans by default. */
 #include <stddef.h>
 #include <stdint.h>
-#include "system.h"
+#include "include/system.h"
 
 /* These are function prototypes for all of the exception
 *  handlers: The first 32 entries in the IDT are reserved

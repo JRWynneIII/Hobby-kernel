@@ -1,8 +1,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "vga.h"
-#include "system.h"
+#include "include/vga.h"
+#include "include/system.h"
 
 #if defined(__linux__)
 #error "You are not using a cross-compiler. Exiting."
@@ -21,6 +21,7 @@ void init_keyboard()
 {
 	queue.bottomOfStack = queue.outQueue[0];
 	memset(queue.outQueue, 0, 15);
+	init_PIC();
 }
 
 void PICsendEOI(unsigned char irq)
