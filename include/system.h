@@ -1,6 +1,9 @@
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
+#include "keyboard.h"
+#include "vga.h"
+
 void outportb (unsigned short _port, unsigned char _data);
 
 static inline void io_wait(void)

@@ -1,7 +1,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "include/vga.h"
 #include "include/system.h"
 
 #if defined(__linux__)
@@ -17,12 +16,6 @@ typedef struct keyQueue
 
 keyQueue queue;
 
-void init_keyboard()
-{
-	queue.bottomOfStack = queue.outQueue[0];
-	memset(queue.outQueue, 0, 15);
-	init_PIC();
-}
 
 void PICsendEOI(unsigned char irq)
 {
@@ -87,7 +80,7 @@ void init_PIC()
 	
 }
 
-void queuePush(size_t code)
+void queuePush()
 {
 	size_t i = 0;
 	for (i = 0; i<15; i++)
@@ -101,4 +94,11 @@ void queuePush(size_t code)
 void keyPressed(size_t code)
 {
 	queue.newPress = code;
+}
+
+void init_keyboard()
+{
+	queue.bottomOfStack = queue.outQueue[0];
+	memset(queue.outQueue, 0, 15);
+	init_PIC();
 }

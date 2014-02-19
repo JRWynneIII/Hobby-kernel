@@ -1,8 +1,6 @@
 #include <stdbool.h> /* C doesn't have booleans by default. */
 #include <stddef.h>
 #include <stdint.h>
-#include "include/vga.h"
-#include "include/keyboard.h"
 #include "include/system.h"
 
 /* Check if the compiler thinks if we are targeting the wrong operating system. */
@@ -17,6 +15,7 @@ void kernel_main()
 	isrs_install();
 	terminal_initialize();
 	init_keyboard();
+	//tputs(1/0);
 	tcputs("Welcome to Polaris\n\n", COLOR_WHITE);
 	tcputs("$>> ", COLOR_GREEN);
 	for (;;);
