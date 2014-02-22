@@ -87,6 +87,10 @@ idt_load:
 .global isr30
 .global isr31
 
+.global irq0
+.global irq1
+.global irq2
+
 #  0: Divide By Zero Exception
 isr0: 
     cli
@@ -333,6 +337,51 @@ isr_common_stub:
     popa
     addl $8,%esp   # Cleans up the pushed error code and pushed ISR number
     iret           # pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP!
+
+
+irq0:
+	cli
+	pushl $0
+	pushl $32
+	jmp irq_common_stub
+
+irq1:
+	cli
+	pushl $0
+	pushl $33
+	jmp irq_common_stub
+
+irq2:
+	cli
+	pushl $0
+	pushl $34
+	jmp irq_common_stub
+
+.extern irq_handler
+
+irq_common_stub:
+	pusha
+	pushl %ds
+	pushl %es
+	pushl %fs
+	pushl %gs
+	mov $0x10,%ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %fs
+	mov %ax, %gs
+	mov %esp,%eax
+	push %eax
+	mov $irq_handler,%eax
+	call *%eax
+	pop %eax
+	pop %gs
+	pop %fs
+	pop %es
+	pop %ds
+	popa
+	addl $8,%esp
+	iret
 
 #create the stack
 .section .bootstrap_stack

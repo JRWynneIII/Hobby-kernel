@@ -1,8 +1,10 @@
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
-#include "keyboard.h"
+#include "irq.h"
 #include "vga.h"
+
+void init_shell();
 
 void outportb (unsigned short _port, unsigned char _data);
 

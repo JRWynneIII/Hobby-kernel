@@ -38,6 +38,10 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
+//
+extern void irq0();
+extern void irq1();
+extern void irq2();
 
 
 /* This is a very repetitive function... it's not hard, it's
@@ -83,6 +87,10 @@ void isrs_install()
     idt_set_gate(29, (unsigned)isr29, 0x08, 0x8E);
     idt_set_gate(30, (unsigned)isr30, 0x08, 0x8E);
     idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
+    //
+    idt_set_gate(32, (unsigned)irq0, 0x08, 0x8E);
+    idt_set_gate(33, (unsigned)irq1, 0x08, 0x8E);
+    idt_set_gate(34, (unsigned)irq2, 0x08, 0x8E);
 }
 
 /* This is a simple string array. It contains the message that

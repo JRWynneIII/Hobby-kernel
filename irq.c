@@ -2,19 +2,21 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "include/system.h"
+#define PIC_READ_IRR 0x0a	//Raised IRQ
+#define PIC_READ_ISR 0x0b
+#define PIC1_COMMAND 0x20
+#define PIC2_COMMAND 0xA0
+#define PIC1_DATA 0x21
+#define PIC2_DATA 0xA1
+#define PIC_INIT 0x11
 
 #if defined(__linux__)
 #error "You are not using a cross-compiler. Exiting."
 #endif
 
-typedef struct keyQueue
+void irq_handler()
 {
-	size_t outQueue[15];
-	size_t newPress;
-	size_t bottomOfStack;
-}keyQueue;
-
-keyQueue queue;
+}
 
 
 void PICsendEOI(unsigned char irq)
@@ -25,13 +27,6 @@ void PICsendEOI(unsigned char irq)
 	outportb(0x20, 0x20);
 }
 
-#define PIC_READ_IRR 0x0a	//Raised IRQ
-#define PIC_READ_ISR 0x0b
-#define PIC1_COMMAND 0x20
-#define PIC2_COMMAND 0xA0
-#define PIC1_DATA 0x21
-#define PIC2_DATA 0xA1
-#define PIC_INIT 0x11
 
 void init_PIC()
 {
@@ -80,25 +75,7 @@ void init_PIC()
 	
 }
 
-void queuePush()
+void install_irq()
 {
-	size_t i = 0;
-	for (i = 0; i<15; i++)
-	{
-		if (queue.outQueue[i] == 0)
-			break;
-	}
-	queue.outQueue[i] = queue.newPress;
-}
-
-void keyPressed(size_t code)
-{
-	queue.newPress = code;
-}
-
-void init_keyboard()
-{
-	queue.bottomOfStack = queue.outQueue[0];
-	memset(queue.outQueue, 0, 15);
 	init_PIC();
 }
