@@ -16,7 +16,6 @@ void kernel_main()
 	terminal_initialize();
 	install_irq();
 	init_shell();
-	__asm__ __volatile__("sti");
 
 	for (;;);
 }

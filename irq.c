@@ -14,19 +14,28 @@
 #error "You are not using a cross-compiler. Exiting."
 #endif
 
-void irq_handler()
+extern void irq0();
+extern void irq1();
+extern void irq2();
+
+//This will hold pointers to the apprpriate IRQ handlers for that interupt. (like keyboard)
+void *irq_routines[16] = 
 {
+	0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0
+};
+
+//installs custom IRQ handler for given irq. (stores pointer to funcion at given irq)
+void irq_install_handler(int irq, void (*handler)(struct regs *r))
+{
+	irq_routines[irq]=handler;
 }
 
-
-void PICsendEOI(unsigned char irq)
+//clears handler for given IRQ
+void irq_uninstall_handler(int irq)
 {
-	//must send 0x20 (EOI) to BOTH PICs if the IRQ came from the slave PIC (0xA0)
-	if (irq>=8)
-		outportb(0xA0, 0x20);
-	outportb(0x20, 0x20);
+	irq_routines[irq] = 0;
 }
-
 
 void init_PIC()
 {
@@ -75,7 +84,31 @@ void init_PIC()
 	
 }
 
+void irq_handler(struct regs *r)
+{
+	//blank function pointer
+	void (*handler)(struct regs *r);
+	//Do we have a custom IRQ handler for this interrupt??
+	//if so, run it
+	handler = irq_routines[r->int_no - 32];
+	if (handler)
+		handler(r);
+
+	//send end of interrupt
+	//must send 0x20 (EOI) to BOTH PICs if the IRQ came from the slave PIC (0xA0)
+	if ((r->int_no-32)>=8)
+		outportb(0xA0, 0x20);
+	outportb(0x20, 0x20);
+}
+
 void install_irq()
 {
+	//reprogram the PICs
 	init_PIC();
+	//install the appropriate ISRs into the IDT
+	idt_set_gate(32, (unsigned)irq0, 0x08, 0x8E);
+    	idt_set_gate(33, (unsigned)irq1, 0x08, 0x8E);
+    	idt_set_gate(34, (unsigned)irq2, 0x08, 0x8E);
+	//turn on interupts!
+	__asm__ __volatile__("sti");
 }
