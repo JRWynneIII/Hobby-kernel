@@ -8,7 +8,8 @@ all: boot.o kernel.o clean
 	i586-elf-gcc -c vga.c -o v.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 	i586-elf-gcc -c system.c -o sys.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 	i586-elf-gcc -c shell.c -o shell.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-	i586-elf-gcc -T linker.ld -o os.bin -ffreestanding -O2 -nostdlib isrs.o gdt.o boot.o k.o v.o irq.o idt.o shell.o sys.o -lgcc
+	i586-elf-gcc -c keyboard.c -o keyboard.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+	i586-elf-gcc -T linker.ld -o os.bin -ffreestanding -O2 -nostdlib keyboard.o isrs.o gdt.o boot.o k.o v.o irq.o idt.o shell.o sys.o -lgcc
 	cp os.bin isodir/boot/
 	grub-mkrescue -o os.iso isodir
 	qemu-system-i386 -vga cirrus -cdrom os.iso

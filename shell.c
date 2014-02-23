@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "include/system.h"
+#include "include/keyboard.h"
 
 /* Check if the compiler thinks if we are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -17,5 +18,5 @@ void init_shell()
 {
 	tcputs("Welcome to Polaris\n\n", COLOR_WHITE);
 	tcputs("$>> ", COLOR_GREEN);
-	irq_install_handler(1, keypress);
+	irq_install_handler(1, keyboard_handler);
 }
