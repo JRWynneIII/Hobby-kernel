@@ -3,6 +3,8 @@
 
 #include "vga.h"
 
+void runShell();
+
 void outportb (unsigned short _port, unsigned char _data);
 
 static inline void io_wait(void)

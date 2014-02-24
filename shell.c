@@ -9,14 +9,14 @@
 #error "You are not using a cross-compiler. Exiting."
 #endif
 
-void keypress(struct regs *r)
-{
-	tputs("keyPress detected\n");
-}
-
 void init_shell()
 {
-	tcputs("Welcome to Polaris\n\n", COLOR_WHITE);
 	tcputs("$>> ", COLOR_GREEN);
 	irq_install_handler(1, keyboard_handler);
+	//doesn't work because init_shell() will return as soon as it passes this if branch
+}
+
+void runShell()
+{
+	tcputs("$>> ", COLOR_GREEN);
 }

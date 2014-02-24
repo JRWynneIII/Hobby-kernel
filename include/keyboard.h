@@ -3,4 +3,6 @@
 
 void keyboard_handler(struct regs *r);
 
+extern uint16_t keyboard_isEnter;
+
 #endif

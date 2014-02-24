@@ -15,6 +15,7 @@ uint8_t make_color(enum vga_color fg, enum vga_color bg)
 	return fg | bg << 4;
 }
  
+
 uint16_t make_vgaentry(char c, uint8_t color)
 {
 	uint16_t c16 = c;
@@ -30,6 +31,7 @@ size_t terminal_column;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
  
+
 void terminal_initialize()
 {
 	terminal_row = 0;
@@ -61,6 +63,14 @@ void movecsr(size_t row, size_t column)
 
 }
  
+void backspace()
+{
+	terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+	terminal_column--;
+	movecsr(terminal_row,terminal_column);
+		
+}
+
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 {
 	const size_t index = y * VGA_WIDTH + (x-1);
@@ -92,6 +102,11 @@ void terminal_putchar(char c)
 	{
 		terminal_column = 0;
 		terminal_row++;
+		return;
+	}
+	if (c == '\b')
+	{
+		backspace();
 		return;
 	}
 	
@@ -138,3 +153,4 @@ void cls()
 	terminal_row = 0;
 	terminal_column = 0;
 }
+

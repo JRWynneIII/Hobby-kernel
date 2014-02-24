@@ -8,6 +8,8 @@
 #error "You are not using a cross-compiler. Exiting."
 #endif
 
+uint16_t keyboard_isEnter = 0;
+
 unsigned char kbdus[128] =
 {
   0,27,'1','2','3','4','5','6','7','8',	/* 9 */
@@ -62,7 +64,11 @@ void keyboard_handler(struct regs *r)
 	}
 	else
 	{
-		//key just pressed down
 		terminal_putchar(kbdus[scancode]);
+		if (kbdus[scancode] == '\n')
+		{
+			runShell();
+		}
+		//key just pressed down
 	}
 }
