@@ -110,9 +110,10 @@ void terminal_putchar(char c)
 		return;
 	}
 	
-	if ( ++terminal_column >= VGA_WIDTH )
+	if (++terminal_column >= VGA_WIDTH )
 	{
 		terminal_column = 0;
+		terminal_row++;
 	}
 	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
 }

@@ -50,7 +50,7 @@ unsigned char kbdus[128] =
     0,	/* All other keys are undefined */
 };
 
-void keyboard_handler(struct regs *r)
+void keyboard_handler()
 {
 	unsigned char scancode;
 	//Read from port 60 when handler is called.
